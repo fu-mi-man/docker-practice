@@ -1,0 +1,24 @@
+services:
+  db:
+    image: postgres:14.2
+    environment:
+      POSTGRES_DB: testdb
+      POSTGRES_USER: testuser
+      POSTGRES_PASSWORD: testpass
+    volumes:
+      - db-data:/var/lib/postgressql/data
+  pgadmin4:
+    image: dpage/pgadmin4:8.3
+    depends_on:
+      - db
+    environment:
+      PGADMIN_DEFAULT_EMAIL: meromeronameron@yahoo.co.jp
+      PGADMIN_DEFAULT_PASSWORD: samplepass
+    ports:
+      - 8080:80
+    volumes:
+      - pgadmin4-data:/var/lib/pgadmin
+
+volumes:
+  db-data:
+  pgadmin4-data:
