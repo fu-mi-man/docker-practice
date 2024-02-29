@@ -1,0 +1,10 @@
+services:
+    apache-php:
+        image: php:apache
+        ports:
+            - "8080:80"
+        volumes:
+            - ./../my-website/admin:/var/www/html/admin
+            - ./../my-website/app:/var/www/html/app
+            - ./../my-website/batch:/var/www/html/batch
+            - ./httpd.conf:/etc/apache2/httpd.conf
