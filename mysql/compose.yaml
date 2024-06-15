@@ -1,0 +1,19 @@
+# mysql -h localhost -u user -ppass
+services:
+  mysql:
+    container_name: mysql
+    image: mysql:8.4
+    ports:
+      - 3306:3306 # MySQLのデフォルトポート
+    volumes:
+      - ./script:/docker-entrypoint-initdb.d   # コンテナ初回起動時，ボリューム消去時に実行される
+      - ./conf/my.cnf:/etc/mysql/conf.d/my.cnf # MySQLの設定ファイル
+      - db-store:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root # rootユーザのパスワード
+      MYSQL_DATABASE: db        # コンテナ起動時に自動的に作成するデータベース名
+      MYSQL_USER: user          # 作成するユーザ
+      MYSQL_PASSWORD: pass      # MYSQL_USERのパスワード
+volumes:
+  db-store: # MySQLのデータを永続化
+    name: db-store
