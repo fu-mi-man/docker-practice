@@ -1,0 +1,15 @@
+services:
+  nuxt:
+    container_name: nuxt2
+    build:
+      context: ./frontend      # ビルドコンテキストを指定
+      dockerfile: ./Dockerfile # Dockerfileがあるディレクトリを指定
+    image: "node:22.2.0" # composeで作成したイメージに名前とタグをつける コンテナ名:タグ
+    environment:
+      - HOST=0.0.0.0 # ホストや他のコンテナからアクセスを許可する
+    volumes:
+      - "./frontend/:/usr/src"
+    ports:
+      - "3000:3000" # ホスト側port:コンテナ側port
+    working_dir: "/usr/src/project"
+    tty: true # コンテナを継続させたい場合に使用
