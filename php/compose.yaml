@@ -1,0 +1,13 @@
+services:
+  php:
+    container_name: php
+    image: "php:8.3"
+    build:
+      context: ./backend
+      dockerfile: ./Dockerfile
+    volumes:
+      - ./backend/:/var/www
+    ports:
+      - "8000:9000"
+    working_dir: "/var/www/project"
+    tty: true
