@@ -1,0 +1,23 @@
+services:
+  php:
+    container_name: php
+    build:
+      context: ./backend
+      dockerfile: ./Dockerfile # ビルドコンテキストからのpath
+    image: "php:8.3"
+    volumes:
+      - ./backend:/var/www
+    # ports:
+    #   - "8000:9000" PHP-FPMのポートはNginxから直接アクセスするため、外部に公開する必要なし
+    working_dir: "/var/www"
+    tty: true
+  nginx:
+    container_name: nginx
+    image: nginx:latest
+    ports:
+      - "80:80" # ブラウザのデフォルトポートは`80`
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./backend:/var/www # PHPコードがあるディレクトリをNginxコンテナにマウント
+    depends_on:
+      - php
