@@ -1,0 +1,38 @@
+services:
+  php:
+    container_name: php
+    build:
+      context: ./backend
+      dockerfile: ./Dockerfile
+    image: "php:8.3"
+    volumes:
+      - ./backend:/var/www
+    working_dir: "/var/www/project"
+    tty: true
+  nginx:
+    container_name: nginx
+    image: nginx:latest
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./backend:/var/www
+    depends_on:
+      - php
+  mysql: # mysql -h localhost -u user -ppass
+    container_name: mysql
+    image: mysql:8.4
+    ports:
+      - 3306:3306 # MySQLのデフォルトポート
+    volumes:
+      - ./mysql/script:/docker-entrypoint-initdb.d   # コンテナ初回起動時，ボリューム消去時に実行される
+      - ./mysql/conf/my.cnf:/etc/mysql/conf.d/my.cnf # MySQLの設定ファイル
+      - db-store:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root # rootユーザのパスワード
+      MYSQL_DATABASE: db        # コンテナ起動時に自動的に作成するデータベース名
+      MYSQL_USER: user          # 作成するユーザ
+      MYSQL_PASSWORD: pass      # MYSQL_USERのパスワード
+volumes:
+  db-store: # MySQLのデータを永続化
+    name: db-store
