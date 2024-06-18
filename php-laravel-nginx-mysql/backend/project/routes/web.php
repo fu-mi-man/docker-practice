@@ -1,0 +1,28 @@
+<?php
+
+use Illuminate\Support\Facades\Route;
+
+Route::get('/', function () {
+    return view('welcome');
+});
+
+Route::get('/hello', function () {
+    echo 'Hello World!!!' . PHP_EOL;
+
+    $dsn = 'mysql:dbname=db;host=db';
+    $user = 'user';
+    $pass = 'pass';
+    try {
+        $dbh = new PDO($dsn, $user, $pass);
+        $stmt = $dbh->prepare("SELECT * FROM people");
+        $stmt->execute();
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    } catch (PDOException $e) {
+        echo $e->getMessage();
+    }
+
+    foreach ($result as $v) {
+        echo $v['username'] . PHP_EOL;
+        echo $v['email'] . PHP_EOL;
+    }
+});
