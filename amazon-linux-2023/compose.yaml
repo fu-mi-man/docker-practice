@@ -1,0 +1,11 @@
+services:
+  amazon-linux:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: amazon-linux-mecab
+    tty: true
+    stdin_open: true
+    volumes:
+      - ./workspace:/workspace
+    working_dir: /workspace
