@@ -123,3 +123,66 @@ config.sub                                      [ <=>                           
 
 - root権限でインストール  
 `sudo make install`
+
+## NEologdのインストール
+### NEologdをクローン
+```
+git clone --depth 1 https://github.com/neologd/mecab-ipadic-neologd.git
+cd mecab-ipadic-neologd
+
+```
+
+### インストールスクリプトを実行
+```
+./bin/install-mecab-ipadic-neologd -n
+```
+
+```
+[install-mecab-ipadic-NEologd] : Install completed.
+[install-mecab-ipadic-NEologd] : When you use MeCab, you can set '/usr/local/lib/mecab/dic/mecab-ipadic-neologd' as a value of '-d' option of MeCab.
+[install-mecab-ipadic-NEologd] : Usage of mecab-ipadic-NEologd is here.
+Usage:
+    $ mecab -d /usr/local/lib/mecab/dic/mecab-ipadic-neologd ...
+
+[install-mecab-ipadic-NEologd] : Finish..
+[install-mecab-ipadic-NEologd] : Finish..
+```
+
+### インストール先を確認
+```
+echo `mecab-config --dicdir`"/mecab-ipadic-neologd"
+```
+
+```
+### 現在の設定を確認
+cat /usr/local/etc/mecabrc
+
+# NEologdをデフォルト辞書に設定（一発コマンド）
+echo "dicdir = $(mecab-config --dicdir)/mecab-ipadic-neologd" | sudo tee /usr/local/etc/mecabrc
+```
+
+```
+[root@4c0111b1df52 /workspace/mecab-ipadic-neologd]$ cat /usr/local/etc/mecabrc
+;
+; Configuration file of MeCab
+;
+; $Id: mecabrc.in,v 1.3 2006/05/29 15:36:08 taku-ku Exp $;
+;
+dicdir =  /usr/local/lib/mecab/dic/ipadic
+
+; userdic = /home/foo/bar/user.dic
+
+; output-format-type = wakati
+; input-buffer-size = 8192
+
+; node-format = %m\n
+; bos-format = %S\n
+; eos-format = EOS\n
+
+[root@4c0111b1df52 /workspace/mecab-ipadic-neologd]$ echo "dicdir = /usr/local/lib/mecab/dic/mecab-ipadic-neologd" > /usr/local/etc/mecabrc
+[root@4c0111b1df52 /workspace/mecab-ipadic-neologd]$ cat /usr/local/etc/mecabrc
+dicdir = /usr/local/lib/mecab/dic/mecab-ipadic-neologd
+[root@4c0111b1df52 /workspace/mecab-ipadic-neologecho "鬼滅の刃" | mecabecab
+鬼滅の刃	名詞,固有名詞,一般,*,*,*,鬼滅の刃,キメツノヤイバ,キメツノヤイバ
+EOS
+```
