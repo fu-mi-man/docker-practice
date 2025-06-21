@@ -1,11 +1,38 @@
 services:
   db:
-    image: postgres
+    # 使用するDockerイメージ
+    image: postgres:15.1 # Supabaseと合わせる
+    # 作成されるコンテナの名前（指定しないと自動生成される）
+    container_name: myapp_postgres
+    # コンテナ内の環境変数を設定
     environment:
-      POSTGRES_DB: testdb
-      POSTGRES_USER: testuser
-      POSTGRES_PASSWORD: testpass
+      # 作成されるデータベース名
+      POSTGRES_DB: myapp_db
+      # PostgreSQLのユーザー名
+      POSTGRES_USER: myapp_user
+      # PostgreSQLのパスワード
+      POSTGRES_PASSWORD: myapp_pass
+
+    # ポートフォワーディング設定（ホスト側:コンテナ側）
+    ports:
+      - '5432:5432' # localhost:5432でアクセス可能になる
+
+    # ボリュームマウント設定
     volumes:
-      - db-data:/var/lib/postgressql/data
+      # データベースのデータを永続化（コンテナ削除してもデータが残る）
+      - db_data:/var/lib/postgresql/data
+      # postgres_data    # ドットなし → Dockerが管理するボリューム名
+      # ./postgres-data  # ドットがある → ローカルの現在ディレクトリ/postgres-data
+      # ローカルの初期化SQLファイルをコンテナ内にマウント
+      # コンテナ起動時に自動実行される
+      # - ./postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
+
+    # コンテナの再起動ポリシー
+    # unless-stopped: 手動で停止するまで、異常終了時に自動再起動
+    restart: unless-stopped
+
+# 名前付きボリュームの定義
 volumes:
-  db-data:
+  # PostgreSQLのデータを保存するボリューム
+  # Dockerが管理する領域にデータが保存される
+  db_data:
