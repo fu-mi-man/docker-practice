@@ -1,0 +1,23 @@
+services:
+  # Next.jsフロントエンド
+  frontend:
+    # Dockerfileからビルドする
+    build:
+      context: ./frontend  # Next.jsプロジェクトのディレクトリ
+      dockerfile: Dockerfile # 使用するDockerfile名
+    container_name: myapp_nextjs
+    # ポート設定（ホスト側:コンテナ側）
+    ports:
+      - '3000:3000'  # localhost:3000でアクセス可能
+    # ボリュームマウント（ローカルファイルとコンテナの同期設定）
+    volumes:
+      - ./frontend:/app    # ローカルのソースコードをコンテナ内にマウント
+      - /app/node_modules  # OS固有ファイルのためマウント除外（コンテナ内のものを使用）
+      - /app/.next         # ビルド成果物のためマウント除外
+    # 開発モードで起動
+    command: pnpm run dev
+    # 開発時の環境変数ファイル（オプション）
+    env_file:
+      - ./frontend/.env.local
+    # コンテナの再起動ポリシー
+    restart: unless-stopped # 手動停止以外は自動で再起動
