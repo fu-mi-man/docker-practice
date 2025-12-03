@@ -5,6 +5,7 @@ services:
       dockerfile: frontend/Dockerfile
     volumes:
       - .:/app
+      - /app/node_modules             # node_modules を匿名ボリューム化して汚染回避
     ports:
       - "5173:5173"
-    command: sh -c "sleep infinity"
+    command: pnpm dev                 # 開発サーバーを実行（Dockerfile の CMD を上書き）
