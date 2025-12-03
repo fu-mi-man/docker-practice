@@ -1,11 +1,11 @@
 services:
   frontend:
     build:
-      context: .
-      dockerfile: frontend/Dockerfile
+      context: .                      # プロジェクトルートをビルドコンテキストにする
+      dockerfile: frontend/Dockerfile # frontend 用の Dockerfile を指定
     volumes:
-      - .:/app
+      - .:/app                        # ソースコードはホスト側を参照（ホットリロード用）
       - /app/node_modules             # node_modules を匿名ボリューム化して汚染回避
     ports:
-      - "5173:5173"
+      - "5173:5173"                   # Vite/Nuxt の開発サーバー用ポート
     command: pnpm dev                 # 開発サーバーを実行（Dockerfile の CMD を上書き）
